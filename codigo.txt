@@ -1,0 +1,257 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:addStatesFromChildren="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cedula" />
+
+        <EditText
+            android:id="@+id/txtcedula"
+            android:layout_width="101dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="120dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nombre:" />
+
+        <EditText
+            android:id="@+id/txtnombre"
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:maxLength="30" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Direccion: " />
+
+        <EditText
+            android:id="@+id/txtdireccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:maxLength="30" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="left"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Peso: " />
+
+        <EditText
+            android:id="@+id/txtpeso"
+            android:layout_width="37dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="200dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="guardar"
+            android:text="Guardar" />
+
+        <Button
+            android:id="@+id/btnb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buscar"
+            android:text="Buscar" />
+
+        <Button
+            android:id="@+id/btnm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modificar" />
+
+        <Button
+            android:id="@+id/btne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar" />
+    </LinearLayout>
+</LinearLayout>
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Button;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+private EditText txtcedula, txtnombre, txtdireccion, txtpeso;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        txtcedula=(EditText)findViewById(R.id.txtcedula);
+        txtnombre=(EditText)findViewById(R.id.txtnombre);
+        txtdireccion=(EditText)findViewById(R.id.txtdireccion);
+        txtpeso=(EditText)findViewById(R.id.txtpeso);
+    }
+
+    public void guardar(View view){
+        AdminSqliteOpenHelper admin = new AdminSqliteOpenHelper
+                (this,"administracion4a",null,1);
+        SQLiteDatabase bd= admin.getWritableDatabase();
+
+        String cedula=txtcedula.getText().toString();
+        String nombre=txtnombre.getText().toString();
+        String direccion=txtdireccion.getText().toString();
+        String peso=txtpeso.getText().toString();
+
+        ContentValues registro=new ContentValues();
+
+        registro.put("datos_cedula",cedula);
+        registro.put("datos_nombre",nombre);
+        registro.put("datos_direccion",direccion);
+        registro.put("datos_peso",peso);
+
+        bd.insert("T_datos",null,registro);
+        bd.close();
+
+        Toast.makeText(this,"se guardo",Toast.LENGTH_SHORT).show();
+
+    }
+    public void buscar(View view){
+        AdminSqliteOpenHelper admin = new AdminSqliteOpenHelper
+                (this,"administracion4a",null,1);
+        SQLiteDatabase bd= admin.getWritableDatabase();
+
+        String cedula=txtcedula.getText().toString();
+
+        Cursor fila=bd.rawQuery("select datos_nombre, datos_direccion,datos_peso " +
+                "from T_datos where datos_cedula="+cedula,null);
+        if (fila.moveToFirst()){
+            txtnombre.setText(fila.getString(0));
+            txtdireccion.setText(fila.getString(1));
+            txtpeso.setText(fila.getString(2));
+
+        }else {
+            Toast.makeText(this,"no existe dato",Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+    }
+
+    public void modificar(View view){
+        AdminSqliteOpenHelper admin = new AdminSqliteOpenHelper
+                (this,"administracion4a",null,1);
+        SQLiteDatabase bd= admin.getWritableDatabase();
+
+        String cedula=txtcedula.getText().toString();
+        String nombre=txtnombre.getText().toString();
+        String direccion=txtdireccion.getText().toString();
+        String peso=txtpeso.getText().toString();
+
+        ContentValues registro=new ContentValues();
+
+        registro.put("datos_nombre",nombre);
+        registro.put("datos_direccion",direccion);
+        registro.put("datos_peso",peso);
+
+        int cant=bd.update("T_datos",registro,
+                "datos_cedula="+cedula,null);
+        if (cant==1){
+            Toast.makeText(this,"se modifico",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this,"no se modifico",Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+    }
+
+    public void eliminar(View view){
+        AdminSqliteOpenHelper admin = new AdminSqliteOpenHelper
+                (this,"administracion4a",null,1);
+        SQLiteDatabase bd= admin.getWritableDatabase();
+
+        String cedula=txtcedula.getText().toString();
+
+        int cant=bd.delete("T_datos","datos_cedula="+cedula,null);
+
+        if (cant==1){
+            Toast.makeText(this,"se elimino",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this,"no se elimino",Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+
+    }
+
+}
